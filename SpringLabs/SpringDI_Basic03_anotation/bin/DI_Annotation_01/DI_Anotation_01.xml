@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:context="http://www.springframework.org/schema/context" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/context 
+	   http://www.springframework.org/schema/context/spring-context.xsd">
+<!--  
+Spring 자신만의 [컨테이너(Spring 전용 메모리 공간)] 제공 (IOC) 안에 
+[객체를 만들고 조립(관계...의존성)] 설정
+
+>>DIConfig.xml 문서를  read 해서 ....안에 있는 코드 먼저 실행
+>>xml 파일 은 컨테이너를 구성하는 객체를 생성하고 의존을 설정하는 파일
+또는  Annotation 통해서 컨테이너 자원 구성
+
+:제어의 역전 (프로그램의 제어구조를 바꾼다)
+:작은 단위의 부품을 만들어 놓고 그 것을 조립하는 행위 (레고 블럭 처럼)
+
+-->
+	
+	<!-- 
+		MonitorViewer viewer = new MonitorViewer();
+
+		Recorder recorder = new Recorder();
+		viewer.setRecorder(recorder);
+		
+		 <bean id="recorder" class="DI_Anotation_01.Recorder"/>
+		 <bean id="monitorViewer" class="DI_Anotation_01.MonitorViewer">
+		 	<property name="recorder">
+		 		<ref bean="recorder"/>
+		 	</property>
+		 </bean>
+	 -->
+	 
+	 <!-- 
+	 	  <bean id="" class=" org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"> </bean>
+		 가 빈 객체로 등록되어있어야 @Autowired 사용 가능
+		 
+		 
+		 <context:annotation-config/>
+			 Annotation 사용에 필요한 모든 클래스를 한번에 빈 객체로 생성한다.(페이지 상단에...)
+		 @Autowired 그냥 사용 가능...
+		 단점) 사용하지 않는 bean도 자동 등록
+	
+		1. injection 되는 타입의 bean 개체가 IOC 컨테이너 안에 없는 경우 Exception
+		2. IOC 컨테이너 안에 같은 type의 bean 객체가 여러개 존재할 경우 Exception
+		3. IOC 컨테이너 안에 같은 type의 bean 객체가 여러개 존재할 경우라도
+			public void setRecorder(Recorder recorder)
+			setter 함수의 파라미터 명이 bean id 값이 같으면 매칭
+			원칙 ) resource (by name) 사용...
+	  -->
+	<context:annotation-config/>
+	<context:component-scan base-package="kr.or.bit.commons"></context:component-scan>
+	 <bean id="recorder" class="DI_Anotation_01.Recorder"/>
+	 <bean id="monitorViewer" class="DI_Anotation_01.MonitorViewer"></bean>
+	 <bean id="a" class="DI_Anotation_01.Recorder"/>
+	 <bean id="b" class="DI_Anotation_01.Recorder"/>
+	 <bean id="c" class="DI_Anotation_01.Recorder"/>
+	
+</beans>
+
+
+

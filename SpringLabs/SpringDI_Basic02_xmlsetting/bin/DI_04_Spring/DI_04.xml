@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://www.springframework.org/schema/beans 
+http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!--  
+	MessageBeanImpl messagebean = new MessageBeanImpl("hong"); // 생성자
+	messagebean.setGreeting("hello"); // setter
+	
+	
+	DI 문법 )
+	<bean id ="한개의 이름" name="여러개의 이름 >> 구분자(, 공백, ;"
+	객체를 생성하고 필요한 객체를 주입 >> xml 파일
+	주입방법 :
+	생성자 주입 : 의무적으로 
+	setter 주입 : 선택적
+-->
+
+   <bean id="messagebean" name="m1,m2;m3" class="DI_04_Spring.MessageBeanImpl">
+   		<!-- <constructor-arg >
+   			<value>hong</value>
+   		</constructor-arg> -->
+   		<constructor-arg value="hong"/>
+   		<property name="greeting" value="안녕"/>
+   </bean>
+</beans>

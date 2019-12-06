@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+			xmlns:context="http://www.springframework.org/schema/context"
+			xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			xsi:schemaLocation="http://www.springframework.org/schema/beans 
+			                           http://www.springframework.org/schema/beans/spring-beans.xsd
+			                           http://www.springframework.org/schema/context 
+			                           http://www.springframework.org/schema/context/spring-context.xsd">
+	<!-- xml 파일 IOC 컨테이너에 적재될 bean 객체 생성과 injection (DI) -->
+	<!--
+		 의존 관계에 필용한 빈 객체 자동 생성
+		  @Autowired ,
+		  @Resource 동작하기 위한 빈객체 ..... 
+		 ****  <context:component-scan base-package="com.controller" /> *****   
+		선언부에 있으면 
+			@Component 
+			@Repository 
+			@Service 
+			@Controller annotation 을 가진 class 에 대해서 
+		<bean id="">  별도로 생성할 필요 없다 자동으로 빈 객체 생성 됩니다 
+		*********************************************** 
+		-->
+	
+	<!-- 공통 -->
+	<context:annotation-config/>
+	<bean id="internalResourceViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	   	<property name="prefix">
+	   		<value>/WEB-INF/views/</value>
+	   	</property>
+	   	<property name="suffix">
+	   		<value>.jsp</value>
+	   	</property>
+    </bean>
+
+	<!-- TEST_1 -->
+	<bean id="helloController" class="com.controller.HelloController" />
+	
+	<!-- TEST_2 -->
+	<!-- 
+		하나의 요청 주소 전송 방식 : GET, POST
+		화면단, 처리단
+		전제 조건 : 요청 주소는 같다
+	 -->
+	 <bean class="com.controller.NewArticleController"/>
+	 <bean class="com.service.ArticleService"/>
+	 
+ 	<!-- TEST_3 -->
+	 <bean class="com.controller.OrderController"/>
+</beans> 
+
+

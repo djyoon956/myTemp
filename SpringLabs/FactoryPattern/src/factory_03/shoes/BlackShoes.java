@@ -4,6 +4,10 @@ import factory_03.Shoes;
 
 public class BlackShoes extends Shoes{
 
+	public BlackShoes() {
+		name="그냥 블랙 슈즈><";
+	}
+
 	@Override
 	public void prepare() {
 		// TODO Auto-generated method stub
@@ -15,5 +19,4 @@ public class BlackShoes extends Shoes{
 		// TODO Auto-generated method stub
 		
 	}
-
 }

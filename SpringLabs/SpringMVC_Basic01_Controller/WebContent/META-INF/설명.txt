@@ -92,7 +92,7 @@
 	실습
 	1. 요청 http://localhost:8090/SpringMVC_Basic01_Controller/hello.htm
 	2. url-pattern : *.htm 에 의해서 DispatcherServlet
-	   DispatcherServlet 사용하는 IOC 컨테이너 안에 bean 생성 (spring-servlet.xml)
+	    DispatcherServlet 사용하는 IOC 컨테이너 안에 bean 생성 (spring-servlet.xml)
 	
 	3. Handler-mapping 작업    (별도의 객체가 존재 -> )
 	   -/hello.htm 주소를 가지고 일치하는 녀석이 있는지  

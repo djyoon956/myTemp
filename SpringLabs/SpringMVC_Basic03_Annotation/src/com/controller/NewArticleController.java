@@ -13,15 +13,15 @@ import com.model.NewArticleCommand;
 import com.service.ArticleService;
 
 /*
-클라이언트 요청
-1. 화면주세요 (글쓰기 , 로그인 화면)           write.do
-2. 처리해주세요 (로그인 처리 , 글쓰기 완료 처리)   writeok.do
-
-/article/newArticle.do  요청 주소가 하나 
-(GET , POST 방식)
-
-/article/newArticle.do  >> GET  >> 화면주세요
-/article/newArticle.do  >> POST >> 처리하세요   
+	클라이언트 요청
+	1. 화면주세요 (글쓰기 , 로그인 화면)           write.do
+	2. 처리해주세요 (로그인 처리 , 글쓰기 완료 처리)   writeok.do
+	
+	/article/newArticle.do  요청 주소가 하나 
+	(GET , POST 방식)
+	
+	/article/newArticle.do  >> GET  >> 화면주세요
+	/article/newArticle.do  >> POST >> 처리하세요   
 
 */
 

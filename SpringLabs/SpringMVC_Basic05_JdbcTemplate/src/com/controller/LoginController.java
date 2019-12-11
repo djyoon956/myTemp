@@ -24,10 +24,34 @@ import com.model.MemberDAO;
  * 
  */
 @Controller
-@RequestMapping("/login.do")
 public class LoginController {
-   
+	private MemberDAO memberdao;
 
+	@Autowired  //by type
+	public void setMemberdao(MemberDAO memberdao) {
+		this.memberdao = memberdao;
+	}
+	
+	@RequestMapping(value = "/login.do", method = RequestMethod.GET)
+	public String form() {
+		return "loginForm";
+	}
+	
+	@RequestMapping(value = "/login.do", method = RequestMethod.POST)
+	public String submit(@RequestParam(value = "id", required = true)String id
+								,@RequestParam(value = "pwd", required = true)String pwd
+								, HttpSession session) throws SQLException {
+		String view = null;
+		boolean result = memberdao.memberCheck(id, pwd);
+		if (result) {
+			view = "loginSuccess";
+			session.setAttribute("USERID", id);
+		}
+		else
+			view = "loginForm";
+		
+		return view;
+	}
 }
 
 

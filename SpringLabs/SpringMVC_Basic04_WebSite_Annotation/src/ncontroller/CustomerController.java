@@ -19,7 +19,6 @@ import vo.Notice;
 
 @Controller
 @RequestMapping("/customer")
-
 public class CustomerController {
 
 	private NoticeDao noticeDao;

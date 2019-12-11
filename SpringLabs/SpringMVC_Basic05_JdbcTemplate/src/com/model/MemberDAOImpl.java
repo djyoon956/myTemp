@@ -38,11 +38,13 @@ public class MemberDAOImpl implements MemberDAO{
 	
 	@Override
 	public boolean memberInsert(String id, String name, String pwd, String email, int age) {
-		String sql = "insert into usermember(id ,name, pwd, email, age) values(?,?,?,?,?)";
+		String sql="insert into usermember(id,name,pwd,email,age) values(?,?,?,?,?)";
 		boolean result = false;
-
-		Object[] params = { id, name, pwd, email, age };
-		if (this.jdbctemplate.update(sql, params) > 0) {
+		
+			
+		Object[] params = {id,name,pwd,email,age};
+		if(this.jdbctemplate.update(sql,params) > 0)
+		{
 			result = true;
 		}
 		return result;
@@ -50,6 +52,7 @@ public class MemberDAOImpl implements MemberDAO{
 
 	@Override
 	public MemberVO selectMemberById(String id) throws SQLException {
+		
 		/*
 			JDBC API
 			preparestatement pstmt = conn....(sql)

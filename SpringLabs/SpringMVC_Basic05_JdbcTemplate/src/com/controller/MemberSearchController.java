@@ -25,9 +25,18 @@ import com.model.MemberVO;
 
 @Controller
 public class MemberSearchController {
+	private MemberDAO memberdao;
+
+	@Autowired  //by type
+	public void setMemberdao(MemberDAO memberdao) {
+		this.memberdao = memberdao;
+	}
 	
+	@RequestMapping(value="/check.do" , method=RequestMethod.GET)
+	public String form() {
+		return "memberSearch";
+	}
 	
-	/*
 	@RequestMapping(value="/check.do" , method=RequestMethod.POST)
 	public String submit(String id, Model model) throws SQLException {
 		MemberVO membervo = memberdao.selectMemberById(id);
@@ -38,9 +47,9 @@ public class MemberSearchController {
 		}else {
 			view = "memberSearch";
 		}
+		
 		return view; 
 	}
-	*/
 }
 
 

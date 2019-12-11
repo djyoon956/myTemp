@@ -2,6 +2,50 @@
 <!DOCTYPE tiles-definitions PUBLIC
        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
        "http://tiles.apache.org/dtds/tiles-config_2_0.dtd">
+<tiles-definitions>
+	<definition name="hello" template="/template/layout.jsp">
+		<put-attribute name="title"  value="[layout master page]" />
+		<put-attribute name="header" value="/template/header.jsp" />
+		<put-attribute name="menu"   value="/template/menu.jsp" />
+		<put-attribute name="body"   value="/hello_body.jsp" />
+		<put-attribute name="footer" value="/template/footer.jsp" />
+	</definition>
+	<!--  
+	문제점
+	위와 같은 구성이라면 
+	만약 컨텐츠가 100개 page
+	1.jsp , 2.jsp  >>> body value="1.jsp" 
+	               >>> body value="2.jsp" 
+	<put-attribute name="body"   value="/1.jsp" />
+	
+	<put-attribute name="body"   value="/2.jsp" />
+	
+	<definition name="hello" template="/template/layout.jsp">
+	정의 파일 100개 생성
+	
+	-->
+	<definition name="itworld.base" template="/template/layout.jsp">
+		<put-attribute name="title"  value="itworld" />
+		<put-attribute name="header" value="/template/header.jsp" />
+		<put-attribute name="menu"   value="/template/menu.jsp" />
+		<put-attribute name="body"   value="/hello_body.jsp" />
+		<put-attribute name="footer" value="/template/footer.jsp" />
+	</definition>
+	<!--  
+	상속개념
+	-->
+	<definition name="itworldsub" extends="itworld.base">  
+		<put-attribute name="title"  value="subworld" />
+	</definition>
+	
+</tiles-definitions>
+
+
+
+
+
+
+
 
 
 

@@ -3,7 +3,7 @@ Tiles 설정하기
 1. UI 구성 lib
    -JSP , Servlet 에서도 사용가능 (Model2 기반 MVC)
    -주로 Spring 에서  사용 (그 외 sitemesh )
-   -spring boot (timeleaf lib)
+   -spring boot (timeleaf lib) > html
 
 
 

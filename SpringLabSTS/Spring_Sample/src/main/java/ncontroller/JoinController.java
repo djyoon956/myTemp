@@ -37,17 +37,20 @@ public class JoinController {
 		System.out.println(bindingResult.getErrorCount());
 		System.out.println(bindingResult.hasGlobalErrors());
 		System.out.println(bindingResult.getGlobalErrorCount());
-		
-		try {
-			memberdao.insert(member);
-		}catch (Exception e) {
-			System.out.println(e.getMessage());
+		if(bindingResult.hasErrors())
+			return "joinus.join";
+		else {
+			try {
+				memberdao.insert(member);
+			}catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			return "redirect:/index.htm";  // /index.htm  
+			//주의사항
+			//요청 주소 ...아래처럼 ..
+			//http://localhost:8090/SpringMVC_Basic06_WebSite_Annotation_JdbcTemplate/index.htm
+			//return "redirect:noticeDetail.htm?seq="+n.getSeq();
 		}
-		return "redirect:/index.htm";  // /index.htm  
-		//주의사항
-		//요청 주소 ...아래처럼 ..
-		//http://localhost:8090/SpringMVC_Basic06_WebSite_Annotation_JdbcTemplate/index.htm
-		//return "redirect:noticeDetail.htm?seq="+n.getSeq();
 	}
 }
 

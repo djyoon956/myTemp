@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.bit.dao.EmpDao">
+	<select id="insertEmp" resultType="int" parameterType="kr.or.bit.dto.Emp">
+		INSERT INTO EMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO, IMAGEFILENAME)
+		VALUES(#{empno}, #{ename}, #{job}, #{mgr}, #{hiredate}, #{sal}, #{comm}, #{deptno}, #{imagefilename})
+	</select>
+	
+	<select id="getEmpByEmpno" resultType="kr.or.bit.dto.Emp" parameterType="int">
+		SELECT EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO , IMAGEFILENAME
+			FROM EMP WHERE EMPNO = #{no}
+	</select>
+	
+	<select id="getJobRegister" resultType="String" >
+		select distinct job from emp
+	</select>
+	
+	<select id="checkAdminLogin" resultType="String">
+		SELECT USERID FROM ADMINLIST WHERE USERID=#{userid} AND PWD=#{pwd}
+	</select>
+	
+	<select id="getEmps" resultType="kr.or.bit.dto.Emp" >
+		SELECT EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO
+			 FROM EMP
+	</select>
+	
+	<delete id="deleteEmpByEmpno">
+		DELETE FROM EMP WHERE EMPNO = #{empno}
+	</delete>
+	
+	<update id="updateEmp" parameterType="kr.or.bit.dto.Emp">
+		UPDATE EMP SET ENAME=#{ename}
+								, JOB=#{job}
+								, MGR=#{mgr}
+								, HIREDATE=#{hiredate}
+								, SAL=#{sal}
+								, COMM=#{comm}
+								, DEPTNO=#{deptno}
+								, IMAGEFILENAME=#{imagefilename}
+		WHERE EMPNO=#{empno}
+	</update>
+	
+	<select id="ChartDataByTotalSalery">
+		SELECT ENAME, totalSal  
+			FROM (SELECT ENAME, SAL+NVL(COMM, 0) AS totalSal FROM EMP ORDER BY totalSal DESC) 
+		WHERE ROWNUM &lt;= #{count}
+	</select>
+	
+	<select id="dataByYear" resultType="kr.or.bit.chart.DataByYear">
+		select to_char(hiredate,'YYYY')as hiredate, round(avg(sal),0) as avgsal ,max(sal) as maxsal ,min(sal)as minsal
+			from emp group by to_char(hiredate,'YYYY') order by hiredate
+	</select>
+	
+	<select id="getDethNos" resultType="int">
+		SELECT DEPTNO FROM DEPT
+	</select>
+	
+	<select id="ChartSalByDept" resultType="kr.or.bit.chart.AvgMaxMinSalaryByDept">
+		select e.deptno as deptno, round(avg(e.sal),0) as avgsal , max(e.sal) as maxsal, min(e.sal) as minsal 
+		from emp e join dept d on e.deptno = d.deptno group by e.deptno
+	</select>
+	
+	<select id="LocChart" resultType="kr.or.bit.chart.LocDept">
+		select d.loc , count(d.loc) from emp e join dept d on e.deptno = d.deptno group by loc
+	</select>
+	
+	<select id="statisticsByMgr" resultType="kr.or.bit.chart.StatisticsByMgr">
+		select e.ename as ename, statistics."mgrnum" as empno, trunc(statistics."avg",0) as avg, statistics."max", statistics."min"
+		from statistics join emp e  
+			on statistics."mgrnum" = e.empno
+	</select>
+</mapper>
+
+
+
+
+

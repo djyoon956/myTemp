@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <div id="content">
 	<form action="" method="post">
 		<h2>회원가입</h2>
@@ -62,11 +64,19 @@
 						010-3456-2934]</span>
 				</dd>
 			</dl>
+			
+			
+			
 			<dl class="join-form-row">
-				<dt class="join-form-title">이메일</dt>
+				<spring:hasBindErrors name="member" />
+				<form method="post">
+				<label for="email">이메일</label>: 
+				<input type="text" name="email" id="email" value="${member.email}"/>
+				<form:errors path="오오"/> 
+				<!-- <dt class="join-form-title">이메일</dt>
 				<dd class="join-form-data">
 					<input type="text" name="email" />
-				</dd>
+				</dd> -->
 			</dl>
 			<dl class="join-form-row">
 				<dt class="join-form-title">취미</dt>

@@ -18,11 +18,12 @@ public class JoinValidator implements Validator {
 		System.out.println("in validate");
 		Member regReq = (Member) target;
 		if (regReq.getEmail() == null || regReq.getEmail().trim().isEmpty())
-			errors.rejectValue("email", "required");
-
+			errors.rejectValue("email", "email을 입력해주세요");
+		
+		// ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "email을 입력해주세요");
+		
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "name을 입력해주세요");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "pwd", "비밀번호를 입력해주세요");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "birth", "생일을 입력해주세요");
 	}
-
 }

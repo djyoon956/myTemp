@@ -118,13 +118,22 @@ public class GuestDAO {
 	//전체 검색 조회_2
 	public List<GuestDTO> getSearchList2(Map<String, String> map){
 		SqlSession session=null;
+		System.out.println("in dao");
 		try{
 			 for(Map.Entry<String, String> m : map.entrySet()){
 				 System.out.println(m.getKey() + "/" + m.getValue() +"-");
 			 }
 			 session = factory.openSession();
-			 return session.selectList("GUEST.selectSearch2",map);
+			 List<GuestDTO> test= session.selectList("GUEST.selectSearch2",map);
+			 System.out.println("end");
+			 for (GuestDTO tt : test) {
+				System.out.println(tt);
+			}
+			 return test;
 		}catch(Exception e){
+			
+			System.out.println("search 2 exception");
+			 System.out.println(e.getMessage());
 			 return null;
 		}finally{
 			if(session != null){session.close();}

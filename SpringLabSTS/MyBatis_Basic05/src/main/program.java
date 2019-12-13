@@ -15,10 +15,8 @@ public class program {
 	    User user = (User)session.selectOne("Emp.getone", "ALLEN");
 	    System.out.println(user.getEmpno());
 	    session.close();
-	    
-
+	   
 	}
-
 }
 
 

@@ -178,7 +178,7 @@ public class CustomerController {
 	//return "redirect:noticeDetail.htm?seq="+n.getSeq();
 	@RequestMapping(value="noticeEdit.htm", method=RequestMethod.POST)
 	public String noticeEdit(Notice n , HttpServletRequest request) throws IOException, ClassNotFoundException, SQLException {
-		
+
 		List<CommonsMultipartFile> files = n.getFiles();
 		List<String> filenames = new ArrayList<String>(); //파일명관리
 		

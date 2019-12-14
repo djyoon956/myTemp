@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 
@@ -40,6 +41,7 @@
 	 	    	    // read the image file as a data URL.
 	 	    	    reader.readAsDataURL(this.files[0]);
 	 	    	});
+		 	    	
 		    	/* $.ajax({
 		    		url:"GetDeptNos",
 		    		dataType:"json",
@@ -109,7 +111,7 @@
 	    	});
     </script>
 </head>
-
+<c:set var="emps" value="${emps}"/>
 <body id="page-top">
     <!-- Top -->
     <jsp:include page="/common/Top.jsp"></jsp:include>
@@ -170,19 +172,19 @@
                                             <div class="form-group">
                                                 <div class="form-row">
                                                     <div class="col-md-6">
-                                                      <!--   <div class="form-label-group">
+                                                        <div class="form-label-group">
                                                             <input type="date" id="hiredate" name="hiredate" class="form-control" placeholder="Hire Date" >
 	                                                        <label for="hiredate">Hire Date</label>
-                                                        </div> -->
+                                                        </div> 
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-label-group">
-                                                        	  <input type="text" id="job" name="job" class="form-control" placeholder="Job" >
-                                                            <label for="job">Job</label>
-                                                        	 <!-- <select id="jobSelect" name="job" style="height : 49px">
-                                                        	 <option hidden>직종 선택</option> 
+                                                        	 <select id="jobSelect" name="job" style="height : 49px">
+                                                        	 	<option hidden>직종 선택</option> 
+                                                        	 	<c:forEach var="job"  items="${jobs}">
+                                                        	 		<option> ${job }</option> 
+                                                        	 	</c:forEach>
                                                              </select> 
-                                                            <label for="job"></label>-->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -191,22 +193,22 @@
                                                 <div class="form-row">
                                                     <div class="col-md-6">
                                                         <div class="form-label-group">
-                                                        	 <input type="text" id="deptno" name="deptno" class="form-control" placeholder="deptno" >
-                                                            <label for="deptno">Dept No</label>
-                                                      <!--   Dept No 
                                                             <select id="deptSelect" name="deptno" style="height : 49px">
                                                             	<option hidden>부서번호 선택</option>
-                                                            </select> -->
+                                                            	<c:forEach var="deptno"  items="${deptnos}">
+                                                        	 		<option> ${deptno }</option> 
+                                                        	 	</c:forEach>
+                                                            </select> 
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <div class="form-label-group">
-                                                        	<input type="text" id="mgr" name="mgr" class="form-control" placeholder="mgr" >
-                                                            <label for="mgr">Manager</label>
-                                                      <!--   Manager 
                                                         	<select id="mgrSelect" name="mgr" style="height : 49px">
                                                             	<option hidden >Manager 선택</option>
-                                                            </select> -->
+                                                            	<c:forEach var="emp" items="${emps}">
+                                                        	 		<option value="${emp.empno }"> ${emp.empno } : ${emp.ename }</option> 
+                                                        	 	</c:forEach>
+                                                            </select> 
                                                         </div>
                                                     </div>
                                                 </div>

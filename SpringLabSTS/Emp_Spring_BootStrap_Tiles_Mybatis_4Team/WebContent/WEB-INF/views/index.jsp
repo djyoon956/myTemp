@@ -29,10 +29,10 @@
 
 <body id="page-top">
     <!-- Top -->
-    <c:import url="./common/Top.jsp"/>
+    <c:import url="/common/Top.jsp"/>
     <div id="wrapper">
         <!-- Left Menu -->
-        <c:import url="./common/Left.jsp"/>
+        <c:import url="/common/Left.jsp"/>
 
         <div id="content-main">
             <div class="container-fluid main">

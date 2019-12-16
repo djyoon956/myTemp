@@ -1,5 +1,6 @@
 package kr.or.bit.dto;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
@@ -48,12 +49,19 @@ public class Emp {
 		this.mgr = mgr;
 	}
 
-	public Date getHiredate() {
-		return hiredate;
+	public String getHiredate() {
+		return new SimpleDateFormat("yyyy-MM-dd").format(hiredate);
 	}
 
-	public void setHiredate(Date hiredate) {
-		this.hiredate = hiredate;
+	public void setHiredate(String hiredate) {
+		Date date = new Date();
+		try {
+			date = new SimpleDateFormat("yyyy-MM-dd").parse(hiredate);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		this.hiredate = date;
 	}
 
 	public int getSal() {

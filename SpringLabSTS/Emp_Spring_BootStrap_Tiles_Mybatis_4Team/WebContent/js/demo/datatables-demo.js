@@ -10,10 +10,10 @@ $(function() {
 	$.ajax({
 		url : "GetDeptNos.do",
 		dataType : "json",
-		success : function(data) {
+		success : function(deptnos) {
 			$("#deptSelect").empty();
 			$("#deptSelect").append("<option value='*'> * </option>");
-			$.each(data.deptnos, function(index, element) {
+			$.each(deptnos, function(index, element) {
 				$("#deptSelect").append("<option value='" + element + "'>" + element + "</option>");
 			})
 		}

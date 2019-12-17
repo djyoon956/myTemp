@@ -1,26 +1,21 @@
 package kr.or.bit.controller;
 
+import java.util.HashMap;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.View;
 
 import kr.or.bit.dao.EmpDao;
 import kr.or.bit.dto.Emp;
 
-@Controller
+@RestController
 public class AjaxController {
-
-	// org.springframework.web.servlet.view.json.MappingJackson2JsonView
-	@Autowired
-	private View jsonview;
 
 	private SqlSession sqlSession;
 
@@ -30,35 +25,30 @@ public class AjaxController {
 	}
 
 	@RequestMapping("/GetSelectBoxData.do")
-	public View getMemberAddData(ModelMap map) {
+	public Map<String, Object> getMemberAddData() {
 		EmpDao dao = sqlSession.getMapper(EmpDao.class);
-		List<Integer> deptnos = dao.getDethNos();
-		List<String> jobs = dao.getJobRegister();
-		List<Emp> emps = dao.getEmps();
 
-		map.addAttribute("deptnos", deptnos);
-		map.addAttribute("jobs", jobs);
-		map.addAttribute("emps", emps);
-
-		return jsonview;
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("deptnos", dao.getDethNos());
+		map.put("jobs", dao.getJobRegister());
+		map.put("emps", dao.getEmps());
+		System.out.println("end set");
+		return map;
 	}
 
 	@RequestMapping("/GetDeptNos.do")
-	public View getDeptnos(ModelMap map) {
+	public List<Integer> getDeptnos() {
 		EmpDao dao = sqlSession.getMapper(EmpDao.class);
 		List<Integer> deptnos = dao.getDethNos();
-		
-		map.addAttribute("deptnos", deptnos);
-		
-		return jsonview;
+
+		return deptnos;
 	}
 
 	@RequestMapping("/CheckEmpno.do")
-	public View checkEmpno(int empno, ModelMap map) {
+	public boolean checkEmpno(int empno, ModelMap map) {
 		EmpDao dao = sqlSession.getMapper(EmpDao.class);
-		Emp emp = dao.getEmpByEmpno(empno);
-		map.addAttribute("isUse", emp != null);
 
-		return jsonview;
+		boolean isUse = dao.getEmpByEmpno(empno) != null;
+		return isUse;
 	}
 }

@@ -57,8 +57,6 @@
     		url:"GetSelectBoxData.do",
     		dataType:"json",
     		success:function(data){
-    			console.log(data);	
-
     			$.each(data.deptnos, function(index, element){
     				let option = $("<option></option>");
     				$(option).text(element);

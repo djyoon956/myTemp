@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 			xmlns:tx="http://www.springframework.org/schema/tx"
+			xmlns:mvc="http://www.springframework.org/schema/mvc"
 		    xmlns:context="http://www.springframework.org/schema/context"
 	        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	        xsi:schemaLocation="http://www.springframework.org/schema/beans 
@@ -8,7 +9,9 @@
 	                            			http://www.springframework.org/schema/context 
 	                            			http://www.springframework.org/schema/context/spring-context.xsd
 	                            			http://www.springframework.org/schema/tx
-	 										http://www.springframework.org/schema/tx/spring-tx.xsd">
+	 										http://www.springframework.org/schema/tx/spring-tx.xsd
+	 										http://www.springframework.org/schema/mvc
+											http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 <!--  
 xml 파일
 IOC 컨테이너에 적재될 bean 객체 생성과 injection (DI)
@@ -46,6 +49,8 @@ IOC 컨테이너에 적재될 bean 객체 생성과 injection (DI)
 -->	
 <context:annotation-config />
 <context:component-scan base-package="kr.or.bit.controller"/>
+<!-- ajax 위한 부분 -->
+<mvc:annotation-driven /> <!-- @ResponseBody  messageConverter : json 변환 .. 동작-->
 
 <bean name="jsonview" class="org.springframework.web.servlet.view.json.MappingJackson2JsonView" />
 </beans> 

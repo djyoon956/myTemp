@@ -46,8 +46,6 @@
 		    		url:"GetSelectBoxData.do",
 		    		dataType:"json",
 		    		success:function(data){
-		    			console.log(data);	
-
 		    			$.each(data.deptnos, function(index, element){
 		    				let option = $("<option></option>");
 		    				$(option).text(element);
@@ -76,8 +74,8 @@
 		    			$.ajax({
 		    				url:"CheckEmpno.do",
 		    				data:{empno:$("#empno").val()},
-		    				success:function(data){
-		    					if(data.isUse){
+		    				success:function(isUse){
+		    					if(isUse){
 		    						errorAlert("중복된 사원번호입니다");
 		    					}else{
 		    						successAlert("사용가능한 사원번호입니다.");

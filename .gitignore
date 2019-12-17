@@ -1,4 +1,6 @@
 /Spring_Document/
 /Spring_Utils/
-/SpringLabs/.metadata/
+/*/.metadata/
+/*/Server/
 *.class
+SpringLabSTS/SpringMVC_Basic08_WebSite_Annotation_jdbcTemplate_Tiles/target/m2e-wtp/web-resources/META-INF/maven/SpringMVC_Basic08_WebSite_Annotation_jdbcTemplate_Tiles/SpringMVC_Basic08_WebSite_Annotation_jdbcTemplate_Tiles/pom.properties

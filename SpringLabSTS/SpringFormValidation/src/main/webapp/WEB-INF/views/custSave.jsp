@@ -17,8 +17,7 @@
 </head>
 <body>
 
-	<springForm:form method="POST" commandName="customer"
-		action="save.do">
+	<springForm:form method="POST" commandName="customer" action="save.do">
 		<table>
 			<tr>
 				<td>Name:</td>

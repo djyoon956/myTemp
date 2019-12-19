@@ -12,20 +12,20 @@
 									       http://www.springframework.org/schema/websocket/spring-websocket.xsd">
 
 	<websocket:handlers>
+		<!-- 
+		/echo-ws로 접속하면 echoHandler bean을 이용해서 처리
+		/chat-ws로 접속하면 echoHandler bean을 이용해서 처리
+	 -->
 		<websocket:mapping handler="echoHandler" path="/echo-ws" />
-		<!-- <websocket:mapping handler="chatHandler" path="/chat-ws" /> -->
+		<websocket:mapping handler="chatHandler" path="/chat-ws" />
 	</websocket:handlers>
 
 	<bean id="echoHandler" class="handler.EchoHandler" />
-	<!-- <bean id="chatHandler" class="handler.ChatWebSocketHandler" /> -->
+	<bean id="chatHandler" class="handler.ChatWebSocketHandler" />
 
 	<websocket:handlers>
-	<!-- 
-		/echo-ws로 접속하면 echoHandler bean을 이용해서 처리
-		/chat-ws로 접속하면 chatHandler bean을 이용해서 처리
-	 -->
 		<websocket:mapping handler="echoHandler" path="/echo.sockjs" />
-		<!-- <websocket:mapping handler="chatHandler" path="/chat.sockjs" /> -->
+		<websocket:mapping handler="chatHandler" path="/chat.sockjs" />
 		<websocket:sockjs />
 	</websocket:handlers>
 	

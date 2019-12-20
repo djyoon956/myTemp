@@ -8,12 +8,9 @@
 <head>
 <meta charset="UTF-8">
 <c:import url="/common/HeadTag.jsp" />
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
-<link
-	href="https://fonts.googleapis.com/css?family=Gothic+A1|Hi+Melody|Jua|Nanum+Pen+Script&display=swap"
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css?family=Gothic+A1|Hi+Melody|Jua|Nanum+Pen+Script&display=swap"
 	rel="stylesheet">
 <script type="text/javascript">
 	//웹소켓 변수 선언
@@ -25,7 +22,7 @@
 		$('#message').keypress(function(event) {
 			var keycode = (event.keyCode ? event.keyCode : event.which);
 			if (keycode == '13') {
-				send();
+				send("message",$('#message').val());
 			}
 			event.stopPropagation();
 		});
@@ -118,9 +115,9 @@
 
 		} else if(data.auth == "memberInfo"){
 			$("#chatMessageArea").append(
-					"<span id='msgsystem'><b>"
+					"<div id='msgsystem' class='text-centet'><b>"
 							 + data.message
-							+ "&nbsp;&nbsp;&nbsp;</b></span>" + "<br>");
+							+ "&nbsp;&nbsp;&nbsp;</b></div>" + "<br>");
 			setChattingMember(data.members);
 		} else {
 			$("#chatMessageArea").append(
@@ -190,11 +187,6 @@
 	clear: both;
 }
 
-#msgsystem {
-	color: black;
-	float: center;
-	cleat: both;
-}
 </style>
 <body id="page-top">
 	<!-- Top -->
@@ -224,8 +216,8 @@
 									</div>
 									<br />
 									<div id="inputBox">
-										<input type="text" id="message" style="width: 400px;">
 					                      <input type="button" id="emoBtn" value="이모티콘">
+										<input type="text" id="message" style="width: 400px;">
 					                      <input type="button" id="sendBtn" value="전송">
 					                      <br>
 					                      <div id="emojiBox" style="border: 1px solid gray;">

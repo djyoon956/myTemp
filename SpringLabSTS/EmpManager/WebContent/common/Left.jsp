@@ -23,12 +23,29 @@
                 <span>Main</span>
             </a>
         </li>
-        <li class="nav-item">
-           <a class="nav-link" href="Chat.do">
-               <i class="fas fa-comments"></i>
-               <span>실시간 채팅</span>
-            </a>
-       </li>
+       <c:choose>
+        	<c:when test="${isLogin}">
+        		<li class="nav-item">
+		            <a class="nav-link" data-toggle="modal" data-target="#logoutModal">
+		                <i class="fas fa-sign-out-alt"></i>
+		                <span>Logout</span>
+		             </a>
+		        </li>
+		        <li class="nav-item">
+		            <a class="nav-link" href="Chat.do">
+		                <i class="fas fa-comments"></i>
+		                <span>실시간 채팅</span>
+		             </a>
+		        </li>
+        	</c:when>
+        	<c:otherwise>
+        		 <li class="nav-item">
+		            <a class="nav-link" href="Login.do">
+		                <i class="fas fa-sign-in-alt"></i>
+		                <span>Login</span></a>
+		        </li>
+        	</c:otherwise>
+        </c:choose>
         <%-- <c:choose>
         	<c:when test="${isLogin}">
         		<li class="nav-item">

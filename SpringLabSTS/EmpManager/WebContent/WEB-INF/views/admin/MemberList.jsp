@@ -14,6 +14,7 @@
     <meta charset="UTF-8">
     <jsp:include page="/common/HeadTag.jsp"></jsp:include>
     <jsp:include page="/common/DataTableScript.jsp"></jsp:include>
+    <script src="js/demo/datatables-demo.js"></script>
     <style type="text/css">
 		.iconColumn {
 			width: 100px;

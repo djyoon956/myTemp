@@ -29,7 +29,7 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor {
 		 */
 
 		// HttpSession 에 저장된 이용자의 아이디를 추출하는 경우
-		String id = (String) req.getSession().getAttribute("id");
+		String id = (String) req.getSession(true).getAttribute("userid");
 		attributes.put("userId", id);
 		System.out.println("HttpSession에 저장된 id:" + id);
 

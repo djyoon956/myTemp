@@ -20,6 +20,9 @@
 
 	<websocket:handlers>
 		<websocket:mapping handler="chatHandler" path="/Chat-ws.do" />
+		<!-- <websocket:handshake-interceptors>
+	       <bean class="kr.or.bit.interceptor.HandshakeInterceptor"/>
+	</websocket:handshake-interceptors> -->
 	</websocket:handlers>
 	
 	<mvc:default-servlet-handler />

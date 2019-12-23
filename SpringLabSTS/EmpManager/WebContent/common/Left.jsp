@@ -32,7 +32,7 @@
 		             </a>
 		        </li>
 		        <li class="nav-item">
-		            <a class="nav-link" href="Chat.do">
+		            <a class="nav-link" href="ChatHome.do">
 		                <i class="fas fa-comments"></i>
 		                <span>실시간 채팅</span>
 		             </a>

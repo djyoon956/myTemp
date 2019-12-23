@@ -1,54 +1,75 @@
 package kr.or.bit.dto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.socket.WebSocketSession;
 
 public class ChatRoom {
 	private String owner;
 	private String name;
 	private int max;
-	private List<String> users;
+	private Map<String, WebSocketSession> users;
 
 	public ChatRoom(String owner, String name, int max) {
 		this.owner = owner;
 		this.name = name;
 		this.max = max;
-		this.users = new ArrayList<String>();
+		this.users = new HashMap<>();
 	}
+
 
 	public String getOwner() {
 		return owner;
 	}
 
+
 	public void setOwner(String owner) {
 		this.owner = owner;
 	}
+
 
 	public String getName() {
 		return name;
 	}
 
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 
 	public int getMax() {
 		return max;
 	}
 
+
 	public void setMax(int max) {
 		this.max = max;
 	}
 
-	public List<String> getUsers() {
+
+	public Map<String, WebSocketSession> getUsers() {
 		return users;
 	}
+	
+	public List<String> getUserName() {
+		return new ArrayList<String>(users.keySet());
+	}
 
-	public void setUsers(List<String> users) {
+
+	public void setUsers(Map<String, WebSocketSession> users) {
 		this.users = users;
 	}
 
-	public void addUsers(String user) {
-		this.users.add(user);
+
+	public void addUser(String user, WebSocketSession session) {
+		users.put(user, session);
+	}
+	
+	public void removeUser(String user) {
+		users.remove(user);
 	}
 }

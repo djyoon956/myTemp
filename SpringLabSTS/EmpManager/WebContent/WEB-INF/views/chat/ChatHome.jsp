@@ -9,11 +9,16 @@
 <meta charset="UTF-8">
 <c:import url="/common/HeadTag.jsp" />
 <jsp:include page="/common/DataTableScript.jsp"></jsp:include>
-<script src="js/demo/datatables_chat.js"></script>
 <script type="text/javascript">
 	let wsocket;
 	$(function() {
 		connect();
+
+		$('#dataTable').DataTable({
+		 	"searching": false,
+		 	"ordering": false
+ 		});
+ 		
 		$("#createChat").click( function() {
 			backAndForth();
 		});
@@ -21,6 +26,10 @@
 		$(window).on("beforeunload", function(){
 			disconnect();
 	    });
+
+	    $('#dataTable tbody').on( 'click', 'button', function () {
+	    	openChat($(this).attr("id"));
+	    } );
 	})
 	
 		
@@ -61,11 +70,11 @@
 
 	  if (currentStep === steps.length) {
 	    let data = { cmd : "createChatRoom"
-		    			  , sender : "${sessionScope.userid}"
 	    	    		  , name : values[0]
 	    	    		  , max : values[1]
 	    	    		};
-	    wsocket.send(JSON.stringify(data));
+	    sendSocket(data);
+	    openChat(data.name);
 	  }
 	}
 
@@ -82,32 +91,51 @@
 	}
 	
 	function onOpen(evt) {
-		let data = { cmd : "on" };
-		wsocket.send(JSON.stringify(data));
+		let data = { cmd : "on"};
+		sendSocket(data);
 	}
 	
-	function onMessage(evt) { // "message" 이름의 MessageEvent 이벤트가 발생하면 처리할 핸들러
+	function onMessage(evt) {
 		var data = JSON.parse(evt.data);
 		setChatRooms(data);
-		
 	}
 	
 	function onClose(evt) {
+		
 	}
 
 	function setChatRooms(data){
 		let num = 1;
 		$('#dataTable > tbody').empty();
-		$.each(JSON.parse(data.rooms), function(index, element){
+		$.each(data.rooms, function(index, element){
 			let room = $("<tr></tr>");
-			room.append("<td>"+(num++)+"</td>");
+			room.append("<td>" + (num++) + "</td>");
 			room.append("<td>"+element.name+"</td>");
+			console.log(element);
 			room.append("<td>"+element.users.length+" / "+element.max+"</td>");
 			room.append("<td>"+element.owner+"</td>");
+			let btn = $("<button>입장</button>");
+			if(element.users.length == element.max)
+				btn.attr("disabled",true);
+
+			btn.attr("id", element.name);
+			room.append($("<td></td>").append(btn));
 			 $('#dataTable > tbody').append(room);
 		})
 	}
-    
+
+    function sendSocket(jsonData) {
+    	jsonData.sender = "${sessionScope.userid}";
+    	wsocket.send(JSON.stringify(jsonData));
+    }
+
+    function openChat(room){
+        console.log("open Chat");
+    	let url = "Chat.do?room="+room;
+    	let name = room;
+    	let option = "width = 500, height = 500, top = 100, left = 200"
+        window.open(url, name, option);
+    }
 </script>
 <style type="text/css">
 	.iconColumn {
@@ -140,6 +168,7 @@
                                             <th width="70%">NAME</th>
                                             <th width="10%">USER</th>
                                             <th width="10%">OWNER</th>
+                                            <th width="10%">ENTER</th>
                                         </tr>
                                     </thead>
 									<tbody>

@@ -17,22 +17,19 @@
 	var wsocket;
 
 	$(function() {
-		$("#exitBtn").hide();
-		$("#inputBox").hide();
+		connect();
 		$('#message').keypress(function(event) {
 			var keycode = (event.keyCode ? event.keyCode : event.which);
 			if (keycode == '13') {
-				send("message",$('#message').val());
+				send($('#message').val());
 			}
 			event.stopPropagation();
 		});
 
 		$('#sendBtn').click(function() {
-			send("message",$('#message').val());
+			send($('#message').val());
 		});
-		$('#enterBtn').click(function() {
-			connect();
-		});
+
 		$('#exitBtn').click(function() {
 			disconnect();
 		});
@@ -54,7 +51,10 @@
 	       $("#emoBtn").click(function(){
 	          $("#emojiBox").toggle();
 	       });
-
+	       
+	       $(window).on("beforeunload", function(){
+				disconnect();
+		    });
 	})
 	
 	function connect() { //입장 버튼 클릭시 작동 함수(웹소켓 생성)
@@ -71,11 +71,12 @@
 	}
 	
 	function onOpen(evt) {
-		$("#enterBtn").hide();
-		$("#nickname").attr("disabled", true);
-		$("#exitBtn").show();
-		$("#inputBox").show();
-		joinChatting();
+		let data = { sender : "${sessionScope.userid}"
+			, cmd : "joinChatRoom"
+			, room : "${room}"	 
+			};
+
+		wsocket.send(JSON.stringify(data));
 	}
 
 	function onMessage(evt) { // "message" 이름의 MessageEvent 이벤트가 발생하면 처리할 핸들러
@@ -86,39 +87,40 @@
 	}
 
 	function onClose(evt) {
-		$("#enterBtn").show();
-		$("#nickname").val("");
 		$("#chatMessageArea").empty();
 		$("#nickname").attr("disabled", false);
-		$("#exitBtn").hide();
-		$("#inputBox").hide();
 		$("#memberArea").empty();
 		$("#memberArea").hide();
 	}
 
-	function send(cmd, message) {
+	function send(message) {
 		let data = { message : message
-						, sender : $("#nickname").val()
-						, cmd : cmd };
+						, cmd : "message"
+						, sender :  "${sessionScope.userid}"
+						, room : "${room}"
+						 };
+		
 		wsocket.send(JSON.stringify(data));
 		$("#message").val("");
 	}
 
 	function appendMessage(data) {
+		console.log("chat message");
 		console.log(data);
-		if (data.auth == "my") {
+		if (data.type == "my") {
 			$("#chatMessageArea").append(
 					"<span id='msgmyname'><b><i class='far fa-grin-alt'></i> "
 							+ data.sender + "&nbsp;&nbsp;&nbsp;</b></span>" + "<br>"
 							+ "<span id='msgmy'><b>" + data.message
 							+ "&nbsp;&nbsp;&nbsp;</b></span>" + "<br>");
 
-		} else if(data.auth == "memberInfo"){
+		} else if(data.type == "memberInfo"){
 			$("#chatMessageArea").append(
 					"<div id='msgsystem' class='text-centet'><b>"
 							 + data.message
 							+ "&nbsp;&nbsp;&nbsp;</b></div>" + "<br>");
-			setChattingMember(data.members);
+			
+			setChattingMember(data.owner, data.users);
 		} else {
 			$("#chatMessageArea").append(
 					"<span id='msgothername'><b>&nbsp;&nbsp;&nbsp;<i class='fas fa-grin-alt'></i> "
@@ -131,21 +133,18 @@
 		var maxScroll = $("#chatMessageArea").height() - chatAreaHeight;
 		$("#chatArea").scrollTop(maxScroll);
 	}
-
-	function joinChatting(){
-		let data = { sender : $("#nickname").val()
-						, cmd : "join" };
-		
-		wsocket.send(JSON.stringify(data));
-	}
 	
-	function setChattingMember(members){
+	function setChattingMember(owner, members){
 		$("#memberArea").empty();
 		$.each(members, function(index, element){
-			if(element == $("#nickname").val())
-				$("#memberArea").append("<span style='background-color:yellow'>"+element+"<span><br>");
-			else
-				$("#memberArea").append("<span>"+element+"<span><br>");
+			let sp = $("<span></span>");
+			if(element == "${sessionScope.userid}")
+				sp.css("background-color","yellow");
+			if(element == owner)
+				sp.append("👑");
+			
+			sp.append(element);
+			$("#memberArea").append(sp);
 		})
 	}
 	
@@ -189,27 +188,16 @@
 
 </style>
 <body id="page-top">
-	<!-- Top -->
-	<c:import url="/common/Top.jsp" />
-	<div id="wrapper">
-		<!-- Left Menu -->
-		<c:import url="/common/Left.jsp" />
-
-		<div id="content-wrapper">
-
-			<!-- !! Content !! -->
+	<!-- !! Content !! -->
 			<div class="container-fluid">
 				<div class="card mb-3">
 					<div class="card-header">
-						<i class="fas fa-comments"></i> 실시간 채팅
+						<i class="fas fa-comments"></i> ${room}
 					</div>
 					<div class="card-body">
 						<div class="row">
 							<div class="col-md-7">
 								<div class="table-responsive">
-									이름 : <input type="text" id="nickname" style="width: 250px;">
-									<input type="button" id="enterBtn" value="입장"> <input
-										type="button" id="exitBtn" value="나가기"> <br> <br>
 									<h5>채팅방</h5>
 									<div id="chatArea">
 										<div id="chatMessageArea"></div>
@@ -252,11 +240,6 @@
 					</div>
 				</div>
 			</div>
-
-			<!-- Bottom -->
-			<c:import url="/common/Bottom.jsp" />
-		</div>
-	</div>
 </body>
 
 </html>

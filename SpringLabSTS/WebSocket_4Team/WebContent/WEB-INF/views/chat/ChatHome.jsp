@@ -29,7 +29,7 @@
 
 	    $('#dataTable tbody').on( 'click', 'button', function () {
 	    	openChat($(this).attr("id"));
-	    } );
+	    });
 	})
 	
 		
@@ -79,20 +79,14 @@
 	}
 
 	 function connect() { 
-		wsocket = new WebSocket("ws://192.168.6.15:8090/EmpManager/Chat-ws.do");
+		wsocket = new WebSocket("ws://192.168.6.15:8090/EmpManager/Chat-ws.do?cmd=on");
 
-		wsocket.onopen = onOpen;
 		wsocket.onmessage = onMessage;
 		wsocket.onclose = onClose;
 	}
 
 	function disconnect() {
 		wsocket.close();
-	}
-	
-	function onOpen(evt) {
-		let data = { cmd : "on"};
-		sendSocket(data);
 	}
 	
 	function onMessage(evt) {

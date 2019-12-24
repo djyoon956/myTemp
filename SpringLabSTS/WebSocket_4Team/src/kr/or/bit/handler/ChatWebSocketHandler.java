@@ -6,14 +6,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.or.bit.dto.ChatRoom;
 
@@ -23,53 +20,54 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	private Map<String, WebSocketSession> users = new ConcurrentHashMap<>();
 	// 채팅방 관리
 	private Map<String, ChatRoom> roomInfos = new HashMap<>();
-	// sessionid, userid
-	private Map<String, String> userNames = new HashMap<>();
 
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		log(session.getId() + " 연결 됨");
-		users.put(session.getId(), session);
+		String cmd =getAttribute(session, "cmd");
+		String user =getAttribute(session, "user");
+		// 채팅 접속
+		if(cmd.equals("on")) {
+			users.put(user, session);			
+			sendChatRoomInfoMessage();
+		}
+		// 채팅방 접속
+		else if(cmd.equals("join")) {
+			joinChatRoom(session, user, getAttribute(session, "room"));
+		}
 	}
 
 	@Override
 	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
-		System.out.println(message);
 		log(session.getId() + "로부터 메시지 수신: " + message.getPayload());
 		JSONObject data = new JSONObject(message.getPayload());
 		String cmd = data.getString("cmd");
-		System.out.println("cmd");
-		System.out.println(cmd);
-		if (cmd.equals("on")) {
-			userNames.put(session.getId(), data.getString("sender"));
-			sendChatRoomInfoMessage();
-		} else if (cmd.equals("message")) {
+
+		if (cmd.equals("message")) {
 			sendMessage(session, data);
-		} else if (cmd.equals("joinChatRoom")) {
-			joinChatRoom(session, data);
 		} else if (cmd.equals("createChatRoom"))
 			createChatRoom(session, data);
 	}
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		String cmd = getAttribute(session, "cmd");
+		String user = getAttribute(session, "user");
+		System.out.println(cmd+user);
 		// 접속 유저 종료
-		if(users.containsKey(session.getId())) { 
+		if(cmd.equals("on")) { 
 			System.out.println("창 종료");
-			users.remove(session.getId());
+			users.remove(user);
 		}
 		// 채팅창 종료
-		else { 
+		else  if(cmd.equals("join")){ 
 			System.out.println("채팅 종료");
-			String out = userNames.get(session.getId());
-			userNames.remove(session.getId());
-			
-			for (ChatRoom room : roomInfos.values()) {
-				if (room.getUsers().containsKey(out)) {
-					room.removeUser(out);
-					sendMemberInfoMessage(room, out + "님이 나가셨습니다.");
-				}
-			}
+			String roomName = getAttribute(session, "room");
+
+			ChatRoom room = roomInfos.get(roomName);
+			room.removeUser(user);
+			sendMemberInfoMessage(room, user + "님이 나가셨습니다.");
+			sendChatRoomInfoMessage();
 		}
 	}
 
@@ -83,20 +81,21 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	}
 
 	private void sendMessage(WebSocketSession session, JSONObject data) throws Exception {
+		String sendUser = getAttribute(session, "user");
 		JSONObject json = new JSONObject().put("message", data.getString("message"))
-																.put("sender", data.getString("sender"));
+																.put("sender", sendUser);
 
 		ChatRoom room = roomInfos.get(data.get("room"));
-		for (WebSocketSession s : room.getUsers().values()) {
-			String type = session.getId().equals(s.getId()) ? "my" : "other";
+		for (Map.Entry<String, WebSocketSession> userInfo : room.getUsers().entrySet()) {
+			String type = sendUser.equals(userInfo.getKey()) ? "my" : "other";
 			json.put("type", type);
 
-			s.sendMessage(new TextMessage(json.toString()));
+			userInfo.getValue().sendMessage(new TextMessage(json.toString()));
 		}
 	}
 
 	private void createChatRoom(WebSocketSession session, JSONObject data) throws Exception {
-		ChatRoom room = new ChatRoom(data.getString("sender")
+		ChatRoom room = new ChatRoom(getAttribute(session, "user")
 														, data.getString("name")
 														, Integer.parseInt(data.getString("max")));
 
@@ -104,11 +103,10 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 		sendChatRoomInfoMessage();
 	}
 
-	private void joinChatRoom(WebSocketSession session, JSONObject data) throws Exception {
-		users.remove(session.getId());
-		ChatRoom room = roomInfos.get(data.get("room"));
-		room.addUser(data.getString("sender"), session);
-		sendMemberInfoMessage(room, data.getString("sender") + "님이 들어오셨습니다.");
+	private void joinChatRoom(WebSocketSession session, String user, String room) throws Exception {
+		ChatRoom chatRoom = roomInfos.get(room);
+		chatRoom.addUser(user, session);
+		sendMemberInfoMessage(chatRoom, user + "님이 들어오셨습니다.");
 
 		sendChatRoomInfoMessage();
 	}
@@ -134,7 +132,12 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 		
 		String jsonString = new JSONObject().put("type", "chatRoomInfo")
 																.put("rooms", array).toString();
+		
 		for (WebSocketSession s : users.values())
 			s.sendMessage(new TextMessage(jsonString));
+	}
+	
+	public String getAttribute(WebSocketSession session, String parameter) {
+		return (String) session.getAttributes().get(parameter);
 	}
 }

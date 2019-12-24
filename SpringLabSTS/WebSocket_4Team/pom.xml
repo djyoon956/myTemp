@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-websocket</artifactId>
-			<version>${org.springframework-version}</version>
+			<version>4.3.1.RELEASE</version>
 		</dependency>
 
 		<!-- File Upload 작업 -->

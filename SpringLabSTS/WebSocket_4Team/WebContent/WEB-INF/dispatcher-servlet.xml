@@ -16,18 +16,16 @@
 <context:annotation-config />
 <context:component-scan base-package="kr.or.bit.controller"/>
 
+
+<websocket:handlers>
+	<websocket:mapping handler="chatHandler" path="/Chat-ws.do" />
+	 <websocket:handshake-interceptors>
+       <bean class="kr.or.bit.interceptor.HandShakeInterceptor"/>
+	</websocket:handshake-interceptors> 
+</websocket:handlers>
+
 <bean id="chatHandler" class="kr.or.bit.handler.ChatWebSocketHandler" />
 
-	<websocket:handlers>
-		<websocket:mapping handler="chatHandler" path="/Chat-ws.do" />
-		 <!-- <websocket:handshake-interceptors>
-	       <bean class="kr.or.bit.interceptor.HandshakeInterceptor"/>
-	</websocket:handshake-interceptors>  -->
-	</websocket:handlers>
-	
-	<mvc:default-servlet-handler />
-
-<!-- ajax 위한 부분 -->
 <mvc:annotation-driven /> 
 </beans> 
 

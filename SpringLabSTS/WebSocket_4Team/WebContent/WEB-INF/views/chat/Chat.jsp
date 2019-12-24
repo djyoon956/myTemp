@@ -21,45 +21,39 @@
 		connect();
 		$('#message').keypress(function(event) {
 			var keycode = (event.keyCode ? event.keyCode : event.which);
-			if (keycode == '13') {
+			if (keycode == '13')
 				send($('#message').val());
-			}
+
 			event.stopPropagation();
 		});
 
 		$('#sendBtn').click(function() {
 			send($('#message').val());
 		});
+		
+		$('#closeBtn').click(function() {
+			self.close();
+		});
 
-	       $(window).on("beforeunload", function(){
-				disconnect();
-		    });
+       $(window).on("beforeunload", function() {
+			disconnect();
+	    });
 	})
 	
 	function connect() { //입장 버튼 클릭시 작동 함수(웹소켓 생성)
-		wsocket = new WebSocket("ws://192.168.6.15:8090/EmpManager/Chat-ws.do?cmd=join&room=${room}");
+		wsocket = new WebSocket("ws://192.168.6.15:8090/WebSocket_4Team/Chat-ws.do?cmd=join&room=${room}");
 
 		//해당 함수 정의
 		wsocket.onmessage = onMessage;
-		wsocket.onclose = onClose;
 	}
 	
 	function disconnect() {
 		wsocket.close();
 	}
 
-	function onMessage(evt) { // "message" 이름의 MessageEvent 이벤트가 발생하면 처리할 핸들러
+	function onMessage(evt) { 
 		var data = JSON.parse(evt.data);
-		console.log(data.sender);
-		console.log(data.message);
 		appendMessage(data);
-	}
-
-	function onClose(evt) {
-		$("#chatMessageArea").empty();
-		$("#nickname").attr("disabled", false);
-		$("#memberArea").empty();
-		$("#memberArea").hide();
 	}
 
 	function send(message) {
@@ -74,29 +68,35 @@
 
 	function appendMessage(data) {
 		if (data.type == "my") {
-			let messageBox = "<div class='msgRbox'>"
-										+ "<span>"+data.sender+"</span>"
-										+ "<div>"+data.message+"</div>"
-									 + "</div>";
+			 let messageBox = "<div class='direct-chat-msg right clearfix'>"
+									+ "	<div class='direct-chat-info text-right'>"
+									+ "	<span class='direct-chat-name'>"+ data.sender +"</span>"
+									+ "	</div>"
+									+ "	<div class='direct-chat-text'>" + data.message + "</div>"
+									+ "</div>";
+									
 			$("#chatMessageArea").append(messageBox);
 		} else if(data.type == "memberInfo"){
-			$("#chatMessageArea").append( "<div class='msgCbox'>" + data.message + "</div>");
+			$("#chatMessageArea").append( "<div class='center-message'>" + data.message + "</div>");
 			setChattingMember(data.owner, data.users);
 		} else {
-			let messageBox = "<div class='msgLbox'>"
-										+ "<span>"+data.sender+"</span>"
-										+ "<div>"+data.message+"</div>"
-									 + "</div>";
+			let messageBox = "<div class='direct-chat-msg clearfix'>"
+									+ "	<div class='direct-chat-info'>"
+									+ "	<span class='direct-chat-name pull-left'>"+ data.sender +"</span>"
+									+ "	</div>"
+									+ "	<div class='direct-chat-text'>" + data.message + "</div>"
+									+ "</div>";
+									
 			$("#chatMessageArea").append(messageBox);
 		}
 
-		let chatAreaHeight = $("#chatArea").height();
+		let chatAreaHeight = $(".box-body").height();
 		console.log(chatAreaHeight);
 		console.log($("#chatMessageArea").height());
 		let maxScroll = $("#chatMessageArea").height() - chatAreaHeight;
 		console.log("scroll");
 		console.log(maxScroll);
-		$("#chatArea").scrollTop(maxScroll);
+		$(".box-body").scrollTop(maxScroll); 
 	}
 	
 	function setChattingMember(owner, members){
@@ -109,76 +109,63 @@
 			if(element == "${sessionScope.userid}")
 				sp.css("background-color","yellow");
 			if(element == owner)
-				sp.append("👑");
+				sp.append("👑  ");
 			
 			sp.append(element);
-			sp.append("<br>");
-			$("#memberArea").append(sp);
+			$("#memberArea").append( $("<li style=' padding-left: 10px;'></li>").append(sp));
 		})
 	}
 	
 </script>
 </head>
 <style>
-#chatArea, #memberArea {
-	height: 300px;
-	overflow-y: auto;
-	border: 1px solid black;
-}
 
-#memberArea {
-	height: 300px;
-	border: 1px solid black;
-}
-
-#pop-up {
-   display: none;
-   position: absolute;
-   width: 280px;
-   padding: 10px;
-   background: #eeeeee;
-   color: #000000;
-   border: 1px solid #1a1a1a;
-   font-size: 90%;
- }
 
 </style>
 <body id="page-top">
-	<!-- !! Content !! -->
-			<div class="container-fluid">
-				<div class="card mb-3">
-					<div class="card-header">
-						<i class="fas fa-comments"></i> ${room}
-					</div>
-					<div class="card-body">
-						<div class="row">
-								<div class="table-responsive">
-								<div class="row">
-									<div class="col-md-12">
-										<h5>채팅방</h5>
-										 
-										<div id="chatArea">
-											<div id="chatMessageArea"></div>
-										</div>
-										<div id="inputBox">
-											<input type="text" id="message" style="width: 400px;">
-						                    <input type="button" id="sendBtn" value="전송">
-						                    <br>
-										</div>
-										
-										<h5>참여 멤버</h5>   
+<div class="col-md-3">
+      <!-- DIRECT CHAT PRIMARY -->
+      <div class="box box-primary direct-chat direct-chat-primary" >
+        <div class="box-header with-border">
+          <h3 class="box-title"> ${room}</h3>
+          <div class="box-tools pull-right">
 
-				                      <div id="memberArea" style="border:2px solid black; width: 100%; height: 320px;">
-				                      
-				                      
-				                      </div>
-									</div>
-								</div>
-								</div> 
-							</div>
-						</div>
-					</div>
+             <div class="btn-group gurdeepoushan">
+				  <button  class="btn btn-box-tool"  data-toggle="dropdown" type="button" aria-expanded="false">
+				   		<i class="fas fa-user-friends"></i>
+				   </button>
+				  <ul id="memberArea" role="menu" class="dropdown-menu pull-right">
+					
+				  </ul>
 				</div>
+            <button type="button" class="btn btn-box-tool" id="closeBtn">
+            	<i class="fa fa-times"></i>
+           	</button>
+          </div>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body" style="height: 350px">
+          <!-- Conversations are loaded here -->
+          <div id="chatMessageArea" class="direct-chat-messages">
+           
+          </div>
+    
+          <!-- /.direct-chat-pane -->
+        </div>
+
+        <div class="box-footer">
+            <div class="input-group">
+              <input type="text" id="message" placeholder="Message" class="form-control">
+                  <span class="input-group-btn">
+                    <button id="sendBtn" class="btn btn-primary btn-flat">Send</button>
+                  </span>
+            </div>
+        </div>
+        <!-- /.box-footer-->
+      </div>
+      <!--/.direct-chat -->
+    </div>
+    
 </body>
 
 </html>

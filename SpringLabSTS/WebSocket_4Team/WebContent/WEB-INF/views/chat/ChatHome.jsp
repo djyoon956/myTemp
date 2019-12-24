@@ -79,7 +79,7 @@
 	}
 
 	 function connect() { 
-		wsocket = new WebSocket("ws://192.168.6.15:8090/EmpManager/Chat-ws.do?cmd=on");
+		wsocket = new WebSocket("ws://192.168.6.15:8090/WebSocket_4Team/Chat-ws.do?cmd=on");
 
 		wsocket.onmessage = onMessage;
 		wsocket.onclose = onClose;
@@ -127,7 +127,7 @@
         console.log("open Chat");
     	let url = "Chat.do?room="+room;
     	let name = room;
-    	let option = "width = 500, height = 500, top = 100, left = 200"
+    	let option = "width = 500, height = 500, top = 100, left = 200, channelmode=yes, toolbar=no, menubar=no, location=no"
         window.open(url, name, option);
     }
 </script>

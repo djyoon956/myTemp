@@ -8,28 +8,15 @@ import java.util.Map;
 import org.springframework.web.socket.WebSocketSession;
 
 public class ChatRoom {
-	private String owner;
 	private String name;
 	private int max;
 	private Map<String, WebSocketSession> users;
 
-	public ChatRoom(String owner, String name, int max) {
-		this.owner = owner;
+	public ChatRoom(String name, int max) {
 		this.name = name;
 		this.max = max;
 		this.users = new HashMap<>();
 	}
-
-
-	public String getOwner() {
-		return owner;
-	}
-
-
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
 
 	public String getName() {
 		return name;

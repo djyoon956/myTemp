@@ -8,18 +8,34 @@ import java.util.Map;
 import org.springframework.web.socket.WebSocketSession;
 
 public class ChatRoom {
+	private int ref = 0;
 	private String owner;
 	private String name;
 	private int max;
 	private Map<String, WebSocketSession> users;
+	
+	
+	public ChatRoom() {
+		this.users = new HashMap<>();
+	
+	}
 
-	public ChatRoom(String owner, String name, int max) {
+	public ChatRoom(String owner, String name, int max, int ref) {
 		this.owner = owner;
 		this.name = name;
 		this.max = max;
+		this.ref = ref;
 		this.users = new HashMap<>();
 	}
 
+
+	public int getRef() {
+		return ref;
+	}
+
+	public void setRef(int ref) {
+		this.ref = ref;
+	}
 
 	public String getOwner() {
 		return owner;
@@ -56,6 +72,8 @@ public class ChatRoom {
 	}
 	
 	public List<String> getUserName() {
+		System.out.println("in getUserName");
+		System.out.println(users.size());
 		return new ArrayList<String>(users.keySet());
 	}
 
@@ -66,6 +84,8 @@ public class ChatRoom {
 
 
 	public void addUser(String user, WebSocketSession session) {
+		System.out.println("chartroom in");
+		System.out.println(users.keySet().toString());
 		users.put(user, session);
 	}
 	

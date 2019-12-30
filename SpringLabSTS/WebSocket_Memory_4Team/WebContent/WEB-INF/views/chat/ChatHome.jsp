@@ -73,7 +73,7 @@
 	    	    		  , name : values[0]
 	    	    		  , max : values[1]
 	    	    		};
-	    sendSocket(data);
+	    wsocket.send(JSON.stringify(data));
 	    openChat(data.name);
 	  }
 	}
@@ -105,9 +105,8 @@
 			let room = $("<tr></tr>");
 			room.append("<td>" + (num++) + "</td>");
 			room.append("<td>"+element.name+"</td>");
-			console.log(element);
 			room.append("<td>"+element.users.length+" / "+element.max+"</td>");
-			room.append("<td>"+element.owner+"</td>");
+			
 			let btn = $("<button>입장</button>");
 			if(element.users.length == element.max)
 				btn.attr("disabled",true);
@@ -118,11 +117,12 @@
 		})
 	}
 
-    function sendSocket(jsonData) {
-    	jsonData.sender = "${sessionScope.userid}";
-    	wsocket.send(JSON.stringify(jsonData));
-    }
-
+	function deleteChat(room, owner){
+		console.log("in");
+		console.log(room);
+		console.log(owner);
+	}
+	
     function openChat(room){
         console.log("open Chat");
     	let url = "Chat.do?room="+room;
@@ -160,9 +160,8 @@
                                         <tr>
                                             <th width="10%">NO</th>
                                             <th width="70%">NAME</th>
-                                            <th width="10%">USER</th>
-                                            <th width="10%">OWNER</th>
-                                            <th width="10%">ENTER</th>
+                                            <th width="15%">USER</th>
+                                            <th width="15%">ENTER</th>
                                         </tr>
                                     </thead>
 									<tbody>

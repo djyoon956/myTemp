@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import kr.or.bit.dao.EmpDao;
+import kr.or.bit.dao.UserDao;
 
 @Controller
 public class LoginController {
@@ -27,23 +27,13 @@ public class LoginController {
 	@RequestMapping("/LoginOk.do")
 	public String loginOk(String userid, String pwd, HttpServletRequest request) {
 		String view = null;
-		System.out.println("in login");
-		try {
-			EmpDao dao = sqlSession.getMapper(EmpDao.class);
-			System.out.println(userid);
-			System.out.println(pwd);
-			String adminId = dao.checkAdminLogin(userid, pwd);
-			System.out.println(adminId);
-			if (adminId != null && !adminId.isEmpty()) {
-				request.getSession().setAttribute("userid", userid);
-				view = "Index.do";
-			} else
-				view = "Login.do";
-
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+		if ((userid != null && !userid.isEmpty())&&(pwd != null && !pwd.isEmpty())) {
+			request.getSession().setAttribute("userid", userid);
+			view = "Index.do";
+		}else {
+			view = "Login.do";
 		}
-
+	
 		return view;
 	}
 

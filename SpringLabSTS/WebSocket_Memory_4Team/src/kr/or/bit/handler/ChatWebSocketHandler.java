@@ -24,12 +24,12 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		log(session.getId() + " 연결 됨");
-		String cmd =getAttribute(session, "cmd");
-		String user =getAttribute(session, "user");
+		String cmd = getAttribute(session, "cmd");
+		String user = getAttribute(session, "user");
 		// 채팅 접속
 		if(cmd.equals("on")) {
 			users.put(user, session);			
-			sendChatRoomInfoMessage();
+			sendChatRoomInfoMessage(session);
 		}
 		// 채팅방 접속
 		else if(cmd.equals("join")) {
@@ -53,15 +53,12 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		String cmd = getAttribute(session, "cmd");
 		String user = getAttribute(session, "user");
-		System.out.println(cmd+user);
 		// 접속 유저 종료
 		if(cmd.equals("on")) { 
-			System.out.println("창 종료");
 			users.remove(user);
 		}
 		// 채팅창 종료
 		else  if(cmd.equals("join")){ 
-			System.out.println("채팅 종료");
 			String roomName = getAttribute(session, "room");
 
 			ChatRoom room = roomInfos.get(roomName);
@@ -95,8 +92,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	}
 
 	private void createChatRoom(WebSocketSession session, JSONObject data) throws Exception {
-		ChatRoom room = new ChatRoom(getAttribute(session, "user")
-														, data.getString("name")
+		ChatRoom room = new ChatRoom(data.getString("name")
 														, Integer.parseInt(data.getString("max")));
 
 		roomInfos.put(room.getName(), room);
@@ -114,7 +110,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	private void sendMemberInfoMessage(ChatRoom room, String message) throws Exception {
 		String jsonString = new JSONObject().put("message", message)
 																.put("type", "memberInfo")
-																.put("owner", room.getOwner())
 																.put("users", new JSONArray(room.getUserName())).toString();
 
 		for (WebSocketSession s : room.getUsers().values())
@@ -124,8 +119,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 	private void sendChatRoomInfoMessage() throws Exception {
 		JSONArray array = new JSONArray();
 		for(ChatRoom room : roomInfos.values()) {
-			array.put(new JSONObject().put("owner", room.getOwner())
-													.put("max", room.getMax())
+			array.put(new JSONObject().put("max", room.getMax())
 													.put("name", room.getName())
 													.put("users", new JSONArray(room.getUserName())));
 		}
@@ -135,6 +129,20 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
 		
 		for (WebSocketSession s : users.values())
 			s.sendMessage(new TextMessage(jsonString));
+	}
+	
+	private void sendChatRoomInfoMessage(WebSocketSession session) throws Exception {
+		JSONArray array = new JSONArray();
+		for (ChatRoom room : roomInfos.values()) {
+			array.put(new JSONObject().put("max", room.getMax())
+					.put("name", room.getName())
+					.put("users", new JSONArray(room.getUserName())));
+		}
+
+		String jsonString = new JSONObject().put("type", "chatRoomInfo")
+																.put("rooms", array).toString();
+
+		session.sendMessage(new TextMessage(jsonString));
 	}
 	
 	public String getAttribute(WebSocketSession session, String parameter) {

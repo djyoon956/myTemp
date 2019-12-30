@@ -44,6 +44,8 @@ IOC 컨테이너에 적재될 bean 객체 생성과 injection (DI)
 <context:annotation-config />
 <context:component-scan base-package="ncontroller" />
 
+
+
 <!-- 게시판 구현 -->
 <bean id="noticeDao"  class="dao.NewNoticeDao"></bean>
 

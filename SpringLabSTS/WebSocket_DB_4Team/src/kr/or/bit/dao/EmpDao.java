@@ -2,6 +2,7 @@ package kr.or.bit.dao;
 
 import java.util.List;
 
+import kr.or.bit.dto.ChatRoom;
 import kr.or.bit.dto.Emp;
 import kr.or.bit.dto.chart.AvgMaxMinSalaryByDept;
 import kr.or.bit.dto.chart.LocDept;
@@ -23,7 +24,7 @@ public interface EmpDao {
 
 	public int updateEmp(Emp emp);
 
-	public List<TotalSaleryChart> ChartDataByTotalSalery(int count);;
+	public List<TotalSaleryChart> ChartDataByTotalSalery(int count);
 
 	public List<Integer> getDethNos();
 
@@ -32,4 +33,6 @@ public interface EmpDao {
 	public List<LocDept> LocChart();
 
 	public List<StatisticsByMgr> statisticsByMgr();
+	
+
 }

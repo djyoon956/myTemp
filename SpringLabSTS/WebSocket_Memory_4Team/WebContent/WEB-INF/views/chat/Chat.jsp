@@ -77,8 +77,8 @@
 									
 			$("#chatMessageArea").append(messageBox);
 		} else if(data.type == "memberInfo"){
-			$("#chatMessageArea").append( "<div class='center-message'>" + data.message + "</div>");
-			setChattingMember(data.owner, data.users);
+			$("#chatMessageArea").append( "<div class='center-message clearfix'>" + data.message + "</div>");
+			setChattingMember(data.users);
 		} else {
 			let messageBox = "<div class='direct-chat-msg clearfix'>"
 									+ "	<div class='direct-chat-info'>"
@@ -99,14 +99,12 @@
 		$(".box-body").scrollTop(maxScroll); 
 	}
 	
-	function setChattingMember(owner, members){
+	function setChattingMember(members){
 		$("#memberArea").empty();
 		$.each(members, function(index, element){
 			let sp = $("<span></span>");
 			if(element == "${sessionScope.userid}")
 				sp.css("background-color","yellow");
-			if(element == owner)
-				sp.append("👑  ");
 			
 			sp.append(element);
 			$("#memberArea").append( $("<li style=' padding-left: 10px;'></li>").append(sp));

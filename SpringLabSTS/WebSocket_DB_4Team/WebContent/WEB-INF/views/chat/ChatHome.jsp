@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<c:set var="ref" value="${ref+1}" />
 <!DOCTYPE html>
 <html>
 
@@ -11,6 +12,7 @@
 <jsp:include page="/common/DataTableScript.jsp"></jsp:include>
 <script type="text/javascript">
 	let wsocket;
+	
 	$(function() {
 		connect();
 
@@ -69,34 +71,38 @@
 	  }
 
 	  if (currentStep === steps.length) {
-	    let data = { cmd : "createChatRoom"
-	    	    		  , name : values[0]
-	    	    		  , max : values[1]
+	    let data = { cmd : "createChatRoom", 
+		    	    	name : values[0], 
+		    	    	max : values[1],
+		    	    	ref : "${ref}"
 	    	    		};
-	    sendSocket(data);
+
+	    wsocket.send(JSON.stringify(data));   
 	    openChat(data.name);
 	  }
 	}
 
-	 function connect() { 
-		wsocket = new WebSocket("ws://192.168.6.15:8090/WebSocket_Memory_4Team/Chat-ws.do?cmd=on");
+	 function connect() {
+		wsocket = new WebSocket("ws://192.168.6.15:8090/WebSocket_DB_4Team/Chat-ws.do?cmd=on"); 
 
 		wsocket.onmessage = onMessage;
 		wsocket.onclose = onClose;
 	}
 
-	function disconnect() {
+	function disconnect() { 
 		wsocket.close();
 	}
 	
-	function onMessage(evt) {
-		var data = JSON.parse(evt.data);
+	function onMessage(evt) { 
+		var data = JSON.parse(evt.data); 
 		setChatRooms(data);
+		
 	}
 	
 	function onClose(evt) {
 		
 	}
+
 
 	function setChatRooms(data){
 		let num = 1;
@@ -105,10 +111,8 @@
 			let room = $("<tr></tr>");
 			room.append("<td>" + (num++) + "</td>");
 			room.append("<td>"+element.name+"</td>");
-			console.log(element);
-			room.append("<td>"+element.users.length+" / "+element.max+"</td>");
-			room.append("<td>"+element.owner+"</td>");
-			let btn = $("<button>입장</button>");
+			room.append("<td>"+element.users.length+ " / " +element.max+"</td>");
+ 			let btn = $("<button>입장</button>");
 			if(element.users.length == element.max)
 				btn.attr("disabled",true);
 
@@ -117,25 +121,23 @@
 			 $('#dataTable > tbody').append(room);
 		})
 	}
-
+		
     function sendSocket(jsonData) {
-    	jsonData.sender = "${sessionScope.userid}";
-    	wsocket.send(JSON.stringify(jsonData));
+    
     }
 
     function openChat(room){
-        console.log("open Chat");
     	let url = "Chat.do?room="+room;
     	let name = room;
-    	let option = "width = 500, height = 500, top = 100, left = 200, channelmode=yes, toolbar=no, menubar=no, location=no"
+    	let option = "width = 500, height = 500, top = 100, left = 200, location = no, channelmode = yes";
         window.open(url, name, option);
     }
 </script>
 <style type="text/css">
-	.iconColumn {
-			width: 100px;
-			text-align: center;
-		}
+.iconColumn {
+	width: 100px;
+	text-align: center;
+}
 </style>
 </head>
 
@@ -151,30 +153,32 @@
 			<!-- !! Content !! -->
 			<div class="container-fluid">
 				<div class="card mb-3">
-					<div class="card-header"> <i class="fas fa-comments"></i> 실시간 채팅 </div>
+					<div class="card-header">
+						<i class="fas fa-comments"></i> 실시간 채팅
+					</div>
 					<div class="card-body">
-						<button id="createChat" class="btn btn-primary mb-3" type="button">채팅방 만들기</button>
-							<div class="table-responsive">
-								<table class="table table-bordered" id="dataTable">
-                                    <thead>
-                                        <tr>
-                                            <th width="10%">NO</th>
-                                            <th width="70%">NAME</th>
-                                            <th width="10%">USER</th>
-                                            <th width="10%">OWNER</th>
-                                            <th width="10%">ENTER</th>
-                                        </tr>
-                                    </thead>
-									<tbody>
-											
-									</tbody>
-								</table>
-								</div>
-							</div>
+						<button id="createChat" class="btn btn-primary mb-3" type="button">채팅방
+							만들기</button>
+						<div class="table-responsive">
+							<table class="table table-bordered" id="dataTable">
+								<thead>
+									<tr>
+										<th width="10%">NO</th>
+										<th width="60%">NAME</th>
+										<th width="10%">USER</th>
+										<th width="10%">ENTER</th>
+									</tr>
+								</thead>
+								<tbody>
+
+								</tbody>
+							</table>
 						</div>
+					</div>
+				</div>
 
 			</div>
-	
+
 
 			<!-- Bottom -->
 			<c:import url="/common/Bottom.jsp" />

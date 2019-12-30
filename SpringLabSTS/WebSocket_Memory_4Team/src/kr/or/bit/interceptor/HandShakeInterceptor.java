@@ -12,7 +12,7 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 
 
 public class HandShakeInterceptor extends HttpSessionHandshakeInterceptor{
-	  
+	
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
     	System.out.println("Before Handshake");

@@ -112,7 +112,7 @@
 		</dependency>
 		<!-- Spring Mybatis 사용 -->
 		<dependency>
-			<groupId>org.mybatis</groupId>
+			<groupId>org.</groupId>
 			<artifactId>mybatis</artifactId>
 			<version>3.1.1</version>
 		</dependency>
